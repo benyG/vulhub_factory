@@ -83,11 +83,14 @@ function Extract-Version($dockerfile) {
     return ''
 }
 function Derive-CveId($cveArray, $path, $name) {
-    if ($cveArray.Count -gt 0 -and $cveArray[0]) {
-        return $cveArray[0]
+    if ($cveArray.Count -gt 0) {
+        $first = $cveArray[0]
+        if ($first -and -not [string]::IsNullOrWhiteSpace($first)) {
+            return $first
+        }
     }
     if ($path) {
-        $segments = $path.Split('/') | Where-Object { $_ }
+        $segments = $path.Split('/') | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
         if ($segments.Count -gt 0) { return $segments[-1] }
     }
     return $name
